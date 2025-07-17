@@ -2,7 +2,7 @@
 
 ## Reflection
 
-In this project, I focused on implementing TypeScript features alongside core object-oriented programming principles to build a product management system. I started by creating a class called `ShopItem` that encapsulated all relevant product data. This class helped me organize each product as an object with its own properties and methods. I also used TypeScript’s type safety to define clear types and interfaces, which made it easier to avoid runtime errors and better understand how data flowed through the application.
+In this project, I focused on implementing TypeScript features alongside core object-oriented programming principles to build a product management system. I started by creating a class called `Product` that encapsulated all relevant product data. This class helped me organize each product as an object with its own properties and methods. I also used TypeScript’s type safety to define clear types and interfaces, which made it easier to avoid runtime errors and better understand how data flowed through the application.
 
 One of the biggest challenges was structuring the project into smaller modules. Initially, everything was in one file, and it quickly became difficult to manage. I refactored the code to separate concerns: one module for the product model, another for pricing utilities, one for API interactions, and another for error handling. This made the codebase cleaner and easier to debug or update.
 
