@@ -1,1 +1,11 @@
 # SBA 6: E-Commerce Product Management System
+
+## Reflection
+
+During the development of this E-Commerce Product Management System, I embraced TypeScript to leverage its strong typing and object-oriented programming (OOP) principles, which greatly enhanced code clarity and maintainability. I designed a `Product` class encapsulating core product attributes and methods, such as calculating discounted prices and displaying details. This class-based structure helped me organize related data and functionality cohesively, embodying encapsulation and abstraction—key OOP concepts.
+
+A major challenge I faced was integrating asynchronous API calls smoothly while maintaining robust error handling. Using async/await syntax allowed me to write asynchronous operations in a readable, synchronous-like manner. However, I initially struggled with ensuring all exceptions, including network failures and data inconsistencies, were caught and handled gracefully without breaking the user experience. To overcome this, I created a dedicated error handler module featuring a custom error class and helper functions to standardize error processing and user-friendly messaging.
+
+Another hurdle involved the interplay between TypeScript modules and their compiled JavaScript counterparts within the browser environment. Managing module imports with correct paths and ensuring scripts loaded correctly required careful attention, especially when configuring the development server and HTML script tags. This experience deepened my understanding of ES modules, project structure, and browser security restrictions.
+
+Overall, the project was a rewarding exercise in combining TypeScript’s static typing with OOP design to build a clean, modular, and scalable application. It also reinforced the importance of thoughtful error management and asynchronous programming patterns in delivering a seamless, resilient user experience. This foundation equips me well for developing more complex real-world applications using modern web technologies.
