@@ -4,32 +4,45 @@ import { calculateTax } from "./utils/taxCalculator";
 import { fetchAllProducts } from "./services/apiService";
 import { handleErrorGracefully } from "./utils/errorHandler";
 
-async function runApp(): Promise<void> {
-    console.log("Starting Product Viewer...");
+async function loadAndRenderProducts(): Promise<void> {
+  try {
+    const rawProducts = await fetchAllProducts();
+    const productList = document.getElementById('productList');
+    if (!productList) return;
 
-    try {
-        const rawProducts = await fetchAllProducts();
+    productList.innerHTML = ''; // clear UI
 
-        if (!rawProducts.length) {
-            throw new Error("No products were fetched from the API");
-        }
+    rawProducts.forEach((data) => {
+      const product = new Product(data);
 
-        const productInstances: Product[] = rawProducts.map((item) => new Product(item));
+      const discount = calculateDiscount(product.price, product.discountedPercentage);
+      const tax = calculateTax(product.price, product.category);
+      const finalPrice = (product.price - discount) + tax;
 
-        for (const product of productInstances) {
-            const discountAmount = calculateDiscount(product.price, product.discountedPercentage);
-            const taxAmount = calculateTax(product.price, product.category);
-            const finalPrice = (product.price - discountAmount) + taxAmount;
+      const card = document.createElement('div');
+      card.className = 'product-card';
 
-            console.log("------------------------------");
-            console.log(product.displayDetails());
-            console.log(`Discount Amount: $${discountAmount}`);
-            console.log(`Tax Amount     : $${taxAmount}`);
-            console.log(`Final Price    : $${finalPrice.toFixed(2)}`);
-        }
-    } catch (error) {
-        handleErrorGracefully(error);
-    }
+      card.innerHTML = `
+        <img src="${product.thumbnail}" alt="${product.title}" />
+        <h2>${product.title}</h2>
+        <p><strong>Category:</strong> ${product.category}</p>
+        <p><strong>Brand:</strong> ${product.brand}</p>
+        <p><strong>Original Price:</strong> $${product.price.toFixed(2)}</p>
+        <p><strong>Discount:</strong> -$${discount}</p>
+        <p><strong>Tax:</strong> +$${tax}</p>
+        <p><strong>Final Price:</strong> $${finalPrice.toFixed(2)}</p>
+      `;
+
+      productList.appendChild(card);
+    });
+  } catch (error) {
+    handleErrorGracefully(error);
+  }
 }
 
-runApp();
+document.addEventListener('DOMContentLoaded', () => {
+  const loadBtn = document.getElementById('loadBtn');
+  if (loadBtn) {
+    loadBtn.addEventListener('click', loadAndRenderProducts);
+  }
+});
