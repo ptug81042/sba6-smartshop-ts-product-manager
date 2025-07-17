@@ -1,43 +1,24 @@
-import { Product } from './../models/Product';
 const BASE_URL = 'https://dummyjson.com/products';
 
-/**
- * Fetches all products from the DummyJSON API.
- * @returns An array of product objects or an empty array if the request fails.
- */
 export async function fetchAllProducts(): Promise<any[]> {
-    try {
-        const response = await fetch(`${BASE_URL}`);
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch products. Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.products || [];
-    } catch (error) {
-        console.error("Error fetching all products:", error);
-        return [];
-    }
+  try {
+    const res = await fetch(BASE_URL);
+    if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+    const data = await res.json();
+    return data.products || [];
+  } catch (err) {
+    console.error("API fetchAllProducts error:", err);
+    return [];
+  }
 }
 
-/**
- * Fetches a single product by ID from the DummyJSON API.
- * @param id - The product ID to fetch.
- * @returns The product object or null if not found or an error occurs.
- */
-export async function fetchProductById(id:number): Promise<any | null> {
-    try {
-        const response = await fetch(`${BASE_URL}/${id}`);
-
-        if (!response.ok) {
-            throw new Error(`Product not found. Status: ${response.status}`);
-        }
-
-        const product = await response.json();
-        return product;
-    } catch (error) {
-        console.error(`Error fetching product with ID ${id}:`, error);
-        return null;
-    }
+export async function fetchProductById(id: number): Promise<any | null> {
+  try {
+    const res = await fetch(`${BASE_URL}/${id}`);
+    if (!res.ok) throw new Error(`Failed to fetch product ${id}: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error(`API fetchProductById error (${id}):`, err);
+    return null;
+  }
 }
