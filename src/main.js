@@ -14,42 +14,29 @@ const discountCalculator_1 = require("./utils/discountCalculator");
 const taxCalculator_1 = require("./utils/taxCalculator");
 const apiService_1 = require("./services/apiService");
 const errorHandler_1 = require("./utils/errorHandler");
-function loadAndRenderProducts() {
+function runApp() {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("🚀 Starting Product Viewer...\n");
         try {
             const rawProducts = yield (0, apiService_1.fetchAllProducts)();
-            const productList = document.getElementById('productList');
-            if (!productList)
-                return;
-            productList.innerHTML = ''; // clear UI
-            rawProducts.forEach((data) => {
-                const product = new Product_1.Product(data);
-                const discount = (0, discountCalculator_1.calculateDiscount)(product.price, product.discountedPercentage);
-                const tax = (0, taxCalculator_1.calculateTax)(product.price, product.category);
-                const finalPrice = (product.price - discount) + tax;
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-        <img src="${product.thumbnail}" alt="${product.title}" />
-        <h2>${product.title}</h2>
-        <p><strong>Category:</strong> ${product.category}</p>
-        <p><strong>Brand:</strong> ${product.brand}</p>
-        <p><strong>Original Price:</strong> $${product.price.toFixed(2)}</p>
-        <p><strong>Discount:</strong> -$${discount}</p>
-        <p><strong>Tax:</strong> +$${tax}</p>
-        <p><strong>Final Price:</strong> $${finalPrice.toFixed(2)}</p>
-      `;
-                productList.appendChild(card);
-            });
+            if (!rawProducts.length) {
+                throw new Error("No products were fetched from the API.");
+            }
+            const productInstances = rawProducts.map((item) => new Product_1.Product(item));
+            for (const product of productInstances) {
+                const discountAmount = (0, discountCalculator_1.calculateDiscount)(product.price, product.discountedPercentage);
+                const taxAmount = (0, taxCalculator_1.calculateTax)(product.price, product.category);
+                const finalPrice = (product.price - discountAmount) + taxAmount;
+                console.log("\n------------------------------");
+                console.log(product.displayDetails());
+                console.log(`Discount Amount: $${discountAmount}`);
+                console.log(`Tax Amount     : $${taxAmount}`);
+                console.log(`Final Price    : $${finalPrice.toFixed(2)}`);
+            }
         }
         catch (error) {
             (0, errorHandler_1.handleErrorGracefully)(error);
         }
     });
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const loadBtn = document.getElementById('loadBtn');
-    if (loadBtn) {
-        loadBtn.addEventListener('click', loadAndRenderProducts);
-    }
-});
+runApp();
