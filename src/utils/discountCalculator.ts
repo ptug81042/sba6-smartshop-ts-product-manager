@@ -1,7 +1,8 @@
-export function calculateDiscount(price: number, discountPercentage: number): number {
-  if (price < 0 || discountPercentage < 0) {
-    throw new Error("Price and discount must be non-negative values.");
+export function calculateDiscount(priceUSD: number, discountPct: number): number {
+  if (priceUSD < 0 || discountPct < 0) {
+    throw new Error("Price and discount percentage must be non-negative.");
   }
-  const discount = (price * discountPercentage) / 100;
-  return parseFloat(discount.toFixed(2));
+
+  const amount = (priceUSD * discountPct) / 100;
+  return parseFloat(amount.toFixed(2));
 }

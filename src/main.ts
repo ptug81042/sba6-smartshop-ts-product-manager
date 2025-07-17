@@ -1,39 +1,33 @@
 import { Product } from "./models/Product";
 import { calculateDiscount } from "./utils/discountCalculator";
 import { calculateTax } from "./utils/taxCalculator";
-import { fetchAllProducts } from "./services/apiService";
+import { loadProductCatalog } from "./services/apiService";
 import { handleErrorGracefully } from "./utils/errorHandler";
 
-/**
- * Fetches all products from the API, calculates discounts and taxes,
- * and logs product details and final pricing to the console.
- */
-async function displayProductData(): Promise<void> {
+async function main(): Promise<void> {
   try {
-    const rawProducts = await fetchAllProducts();
-
-    if (!rawProducts.length) {
-      console.log("No products available.");
+    const catalog = await loadProductCatalog();
+    if (!catalog.length) {
+      console.log("No products found.");
       return;
     }
 
-    rawProducts.forEach((item, index) => {
-      const product = new Product(item);
+    catalog.forEach((data, index) => {
+      const product = new Product(data);
 
-      const discount = calculateDiscount(product.price, product.discountPercentage);
-      const tax = calculateTax(product.price, product.category);
-      const finalPrice = (product.price - discount + tax).toFixed(2);
+      const discount = calculateDiscount(product.priceUSD, product.discountPct);
+      const tax = calculateTax(product.priceUSD, product.category);
+      const final = (product.priceUSD - discount + tax).toFixed(2);
 
-      console.log(`\n--- Product ${index + 1} ---`);
-      console.log(product.displayDetails());
+      console.log(`\n--- Product #${index + 1} ---`);
+      console.log(product.infoString());
       console.log(`Discount: -$${discount}`);
       console.log(`Tax: +$${tax}`);
-      console.log(`Final Price: $${finalPrice}`);
+      console.log(`Final Price: $${final}`);
     });
   } catch (error) {
     handleErrorGracefully(error);
   }
 }
 
-// Execute when file runs
-displayProductData();
+main();

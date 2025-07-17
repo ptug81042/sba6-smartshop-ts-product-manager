@@ -1,48 +1,39 @@
 export class Product {
-  id: number;
-  title: string;
+  itemId: number;
+  name: string;
   description: string;
-  price: number;
-  discountPercentage: number;
+  priceUSD: number;
+  discountPct: number;
   category: string;
-  brand: string;
-  thumbnail: string;
+  brandName: string;
+  thumbnailURL: string;
 
-  constructor(data: {
-    id: number;
-    title: string;
-    description: string;
-    price: number;
-    discountPercentage: number;
-    category: string;
-    brand: string;
-    thumbnail: string;
-  }) {
-    this.id = data.id;
-    this.title = data.title;
+  constructor(data: any) {
+    this.itemId = data.id;
+    this.name = data.title;
     this.description = data.description;
-    this.price = data.price;
-    this.discountPercentage = data.discountPercentage;
+    this.priceUSD = data.price;
+    this.discountPct = data.discountPercentage;
     this.category = data.category;
-    this.brand = data.brand;
-    this.thumbnail = data.thumbnail;
+    this.brandName = data.brand;
+    this.thumbnailURL = data.thumbnail;
   }
 
-  displayDetails(): string {
+  infoString(): string {
     return `
-Product ID: ${this.id}
-Title      : ${this.title}
-Brand      : ${this.brand}
+Item ID    : ${this.itemId}
+Name       : ${this.name}
+Brand      : ${this.brandName}
 Category   : ${this.category}
-Price      : $${this.price.toFixed(2)}
-Discount   : ${this.discountPercentage}%
+Price      : $${this.priceUSD.toFixed(2)}
+Discount   : ${this.discountPct}%
 Description: ${this.description}
-Thumbnail  : ${this.thumbnail}
+Thumbnail  : ${this.thumbnailURL}
     `.trim();
   }
 
-  getPriceWithDiscount(): number {
-    const discount = (this.price * this.discountPercentage) / 100;
-    return parseFloat((this.price - discount).toFixed(2));
+  discountedAmount(): number {
+    const amount = (this.priceUSD * this.discountPct) / 100;
+    return parseFloat(amount.toFixed(2));
   }
 }
