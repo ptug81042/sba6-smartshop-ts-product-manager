@@ -10,6 +10,6 @@ export function calculateDiscount(priceUSD: number, discountPct: number): number
   // Standard percentage math: (price * percent) / 100
   const amount = (priceUSD * discountPct) / 100;
 
-  // Round 2 decimal places to reflect typical currency formatting.
+  // Round the result to 2 decimal places to reflect typical currency formatting.
   return parseFloat(amount.toFixed(2));
 }
