@@ -1,3 +1,5 @@
+// Product class represents a single item in the catalog.
+// It helps standardize raw product data into a consistent, usable format.
 export class Product {
   itemId: number;
   name: string;
@@ -8,6 +10,7 @@ export class Product {
   brandName: string;
   thumbnailURL: string;
 
+  // Constructor takes raw API data and maps it into our local format.
   constructor(data: any) {
     this.itemId = data.id;
     this.name = data.title;
@@ -19,6 +22,8 @@ export class Product {
     this.thumbnailURL = data.thumbnail;
   }
 
+  // Returns a nicely formatted multi-line string with product info.
+  // This is useful for quick logging or terminal display.
   infoString(): string {
     return `
 Item ID    : ${this.itemId}
@@ -29,9 +34,11 @@ Price      : $${this.priceUSD.toFixed(2)}
 Discount   : ${this.discountPct}%
 Description: ${this.description}
 Thumbnail  : ${this.thumbnailURL}
-    `.trim();
+    `.trim(); // Remove heading/trailing whitespace for clean output
   }
 
+  // Calculates the raw discount amount based on the price and discount percentage.
+  // Handy for future features that break out savings as a line item.
   discountedAmount(): number {
     const amount = (this.priceUSD * this.discountPct) / 100;
     return parseFloat(amount.toFixed(2));
